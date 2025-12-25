@@ -1,0 +1,6 @@
+@SmartBazaar.API_HostAddress = http://localhost:5009
+
+GET {{SmartBazaar.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
