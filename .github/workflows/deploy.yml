@@ -1,12 +1,13 @@
 name: Build and Deploy to GHCR
+
 on:
+  workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
 
 env:
   REGISTRY: ghcr.io
-  # This sets the image name to your github username/repo-name
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: smartbazaar-api
 
 jobs:
   build-and-deploy:
@@ -31,12 +32,11 @@ jobs:
         with:
           context: .
           push: true
-          # Tags it as ghcr.io/your-username/smart_bazaar:latest
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'smartbazaar-api'
+          app-name: smartbazaar-api
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          images: 'ghcr.io/${{ github.repository }}:latest'
+          images: ghcr.io/${{ github.actor }}/${{ env.IMAGE_NAME }}:latest
